@@ -1,17 +1,74 @@
 @import "tailwindcss";
 
+/* ─── NOUN Connect design tokens ─────────────────────────────────────
+   Brand: NOUN emerald identity.
+   Design language: calm neutral surfaces, 1px hairline borders,
+   feather shadows, rounded-full controls, restrained type scale. */
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif;
+
+  /* Brand greens (NOUN identity) */
+  --color-noun-50: #ecfdf5;
+  --color-noun-100: #d1fae5;
+  --color-noun-200: #a7f3d0;
+  --color-noun-500: #10b981;
+  --color-noun-600: #059669;
+  --color-noun-700: #047857;
+  --color-noun-800: #065f46;
+  --color-noun-900: #064e3b;
+  --color-noun-ink: #123f33; /* deep brand surface */
+
+  /* Neutrals */
+  --color-line: #e3e8ef;
+  --color-surface: #f4f6f8;
+}
+
 :root {
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color-scheme: light;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
-  background-color: #f8fafc;
-  color: #0f172a;
+  margin: 0;
+  min-width: 320px;
+  max-width: 100%;
+  overflow-x: hidden;
+  background-color: var(--color-surface);
+  color: #121926;
+  font-family: var(--font-sans);
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Custom scrollbar styling for compact mobile feel */
+#root {
+  min-height: 100vh;
+  max-width: 100%;
+  min-width: 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-noun-600);
+  outline-offset: 2px;
+}
+
+/* Slim scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -27,3 +84,329 @@ body {
   background: #94a3b8;
 }
 
+/* ─── Shared component primitives ──────────────────────────────────── */
+@layer components {
+  /* Cards */
+  .card {
+    background: #ffffff;
+    border: 1px solid var(--color-line);
+    border-radius: 16px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  }
+
+  .card-hover {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .card-hover:hover {
+    border-color: #c6d0dc;
+    box-shadow: 0 4px 14px rgba(16, 24, 40, 0.07);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 18px;
+    border: 1px solid transparent;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+      color 0.15s ease;
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-sm {
+    height: 32px;
+    padding: 0 14px;
+    font-size: 12px;
+  }
+  .btn-primary {
+    background: var(--color-noun-800);
+    color: #ffffff;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-noun-900);
+  }
+  .btn-secondary {
+    background: #ffffff;
+    border-color: var(--color-line);
+    color: #364152;
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: #f8fafc;
+    border-color: #c6d0dc;
+  }
+  .btn-tonal {
+    background: var(--color-noun-50);
+    color: var(--color-noun-800);
+  }
+  .btn-tonal:hover:not(:disabled) {
+    background: var(--color-noun-100);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: #4b5565;
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background: #eef2f6;
+    color: #121926;
+  }
+
+  /* Inputs */
+  .input {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    background: #ffffff;
+    color: #121926;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .input::placeholder {
+    color: #9aa4b2;
+  }
+  .input:focus {
+    border-color: var(--color-noun-700);
+  }
+  .input:disabled {
+    background: #f8fafc;
+    color: #9aa4b2;
+  }
+  textarea.input {
+    height: auto;
+    min-height: 80px;
+    padding: 10px 14px;
+    resize: vertical;
+  }
+  select.input {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23697586' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 34px;
+  }
+  .input-sm {
+    height: 38px;
+    font-size: 13px;
+  }
+
+  .field-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #364152;
+  }
+
+  /* Filter pills */
+  .pill-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 34px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 100px;
+    background: #eef2f6;
+    color: #364152;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .pill-tab:hover:not(.is-active) {
+    background: #e3e8ef;
+  }
+  .pill-tab.is-active {
+    background: var(--color-noun-800);
+    color: #ffffff;
+  }
+
+  /* Underline tabs */
+  .tab-underline {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 2px 12px;
+    border: 0;
+    background: transparent;
+    color: #697586;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.15s ease;
+  }
+  .tab-underline:hover {
+    color: var(--color-noun-900);
+  }
+  .tab-underline.is-active {
+    color: var(--color-noun-900);
+    font-weight: 600;
+  }
+  .tab-underline.is-active::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: var(--color-noun-800);
+  }
+
+  /* Small status chips */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 22px;
+    padding: 0 9px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .chip-brand {
+    background: var(--color-noun-50);
+    color: var(--color-noun-800);
+  }
+  .chip-neutral {
+    background: #eef2f6;
+    color: #4b5565;
+  }
+  .chip-amber {
+    background: #fef3e2;
+    color: #92400e;
+  }
+
+  /* Modal scaffolding — panel fits viewport; only inner body scrolls */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    overscroll-behavior: none;
+    padding: 12px;
+    background: rgba(9, 18, 15, 0.55);
+    backdrop-filter: blur(2px);
+    -webkit-overflow-scrolling: touch;
+  }
+  .modal-overlay.modal-overlay--top {
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+  .modal-overlay.modal-overlay--end {
+    align-items: stretch;
+    justify-content: flex-end;
+    padding: 0;
+  }
+  .modal-panel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: min(92dvh, 92vh);
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid var(--color-line);
+    border-radius: 20px;
+    box-shadow: 0 24px 60px rgba(9, 18, 15, 0.28);
+  }
+  .modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Page headers */
+  .page-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: #121926;
+  }
+  .page-subtitle {
+    margin: 4px 0 0;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #697586;
+  }
+  .section-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #121926;
+  }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #9aa4b2;
+  }
+}
+
+/* Lock page scroll while a modal/drawer is open */
+body.modal-open {
+  overflow: hidden !important;
+}
+
+/* ─── Utilities ────────────────────────────────────────────────────── */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.animate-fadeIn {
+  animation: fade-in 0.22s ease both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fadeIn {
+    animation: none;
+  }
+}
