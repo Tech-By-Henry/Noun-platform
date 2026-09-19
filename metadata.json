@@ -1,0 +1,6 @@
+{
+  "name": "NOUN Connect",
+  "description": "Student communication, community, and information platform concept prototype for open and distance learning.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
