@@ -1,9 +1,33 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { INITIAL_USER, STUDENTS_DIRECTORY, STUDY_CENTRES, ANNOUNCEMENTS, EVENTS, COMMUNITIES, GROUPS, CHAT_THREADS, INITIAL_MESSAGES, NOTIFICATIONS, ANNOUNCEMENT_COMMENTS, DEMO_PERSONAS, } from '../data/mockData';
+
+const TAB_KEY = 'noun-connect-active-tab';
+const CHAT_KEY = 'noun-connect-active-chat';
+const VALID_TABS = new Set(['home', 'updates', 'explore', 'communities', 'messages', 'profile']);
+
+const readStoredTab = () => {
+    try {
+        const t = sessionStorage.getItem(TAB_KEY);
+        return VALID_TABS.has(t) ? t : 'home';
+    }
+    catch {
+        return 'home';
+    }
+};
+
+const readStoredChat = () => {
+    try {
+        return sessionStorage.getItem(CHAT_KEY) || null;
+    }
+    catch {
+        return null;
+    }
+};
+
 const AppContext = createContext(undefined);
 export const AppProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(INITIAL_USER);
-    const [activeTab, setActiveTab] = useState('home');
+    const [activeTab, setActiveTab] = useState(readStoredTab);
     const [modal, setModal] = useState({ type: null });
     const [students] = useState(STUDENTS_DIRECTORY);
     const [studyCentres] = useState(STUDY_CENTRES);
@@ -15,7 +39,24 @@ export const AppProvider = ({ children }) => {
     const [chatThreads, setChatThreads] = useState(CHAT_THREADS);
     const [messages, setMessages] = useState(INITIAL_MESSAGES);
     const [comments, setComments] = useState(ANNOUNCEMENT_COMMENTS);
-    const [activeChatId, setActiveChatId] = useState(null);
+    const [activeChatId, setActiveChatId] = useState(readStoredChat);
+
+    useEffect(() => {
+        try {
+            sessionStorage.setItem(TAB_KEY, activeTab);
+        }
+        catch { /* ignore */ }
+    }, [activeTab]);
+
+    useEffect(() => {
+        try {
+            if (activeChatId)
+                sessionStorage.setItem(CHAT_KEY, activeChatId);
+            else
+                sessionStorage.removeItem(CHAT_KEY);
+        }
+        catch { /* ignore */ }
+    }, [activeChatId]);
     // Recalculate official communities when student details change
     const updateUserCoordinates = (updates) => {
         const updated = { ...currentUser, ...updates };
